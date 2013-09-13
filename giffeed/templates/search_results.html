@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-                {% for p in urls %}
+                {% for url,f in form_collection.items %}
                     <div class="row-fluid">
                         <div class="span4 username-container" align="right">
                             <h2>{{search_request}}</h2>
                         </div><!--/span-->
                         <div class="span8 gif-container {% if not forloop.last %}bottom{% endif %}" align="center">
-                            <a href="{{ search_request }}"> <img src="{{ p }}"></a>
+                            <a href="{{ search_request }}"> <img src="{{ url }}"></a>
                         </div><!--/span-->
+{#                    Form    #}
+                        {% for field in f %}
+                            {{ field }}
+                        {% endfor %}
                     </div><!--/row-->
                 {% endfor %}
 

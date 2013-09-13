@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.template.context import RequestContext
 from twython import Twython
+from giffeed.forms import RepostForm
 from models import SearchKeyWord
 from django.conf import settings
 from datetime import datetime, timedelta
@@ -57,7 +58,7 @@ def fetch_tweets(search_request):
 
 def search(request):
     """
-    searches
+    searches gifs in twitter
     """
     if 'q' in request.GET:
         # AD: NOTE: let's also tweets that have the keyword and
@@ -87,7 +88,15 @@ def search(request):
             # If page is out of range (e.g. 9999), deliver last page of results.
             urls = paginator.page(paginator.num_pages)
 
+        form_collection = {}
+        for url in urls:
+            f = RepostForm(request.POST or None, initial={'url': url})
+            form_collection[url] = (url, f)
+            print url
+
+        print form_collection
         context = RequestContext(request)
+        context['form_collection'] = form_collection
         context['urls'] = urls
         context['search_request'] = search_request
         context['q'] = request.GET['q']
